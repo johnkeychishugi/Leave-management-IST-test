@@ -10,7 +10,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -56,6 +58,7 @@ public class User {
     @Column(name = "preferred_theme")
     private String preferredTheme = "light"; // Default to light theme
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "notification_preferences", columnDefinition = "jsonb")
     private String notificationPreferences = "{\"email\":true,\"inApp\":true}"; // Default to all notifications enabled
 

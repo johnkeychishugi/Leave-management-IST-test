@@ -168,6 +168,7 @@ public class UserServiceImpl implements UserService {
         }
         
         if (notificationPreferences != null) {
+            // Just set the value - Hibernate will handle the JSON conversion with @JdbcTypeCode
             existingUser.setNotificationPreferences(notificationPreferences);
         }
         

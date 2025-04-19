@@ -156,8 +156,16 @@ public class UserController {
         String theme = settings.containsKey("preferredTheme") ? 
             settings.get("preferredTheme").toString() : null;
             
-        String notificationPrefs = settings.containsKey("notificationPreferences") ? 
-            settings.get("notificationPreferences").toString() : null;
+        String notificationPrefs = null;
+        if (settings.containsKey("notificationPreferences")) {
+            try {
+                // Convert the notification preferences to a JSON string
+                com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
+                notificationPrefs = objectMapper.writeValueAsString(settings.get("notificationPreferences"));
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Invalid notification preferences format: " + e.getMessage());
+            }
+        }
             
         return ResponseEntity.ok(userService.updateUserSettings(id, theme, notificationPrefs));
     }
