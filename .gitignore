@@ -1,0 +1,58 @@
+#ignore node_modules in frontend
+frontend/node_modules
+
+#ignore .env in frontend
+frontend/.env
+
+#ignore .env in backend
+backend/.env
+
+#ignore .env in root
+.env
+
+#ignore .env in backend
+backend/.env
+
+#ignore .env in root
+.env
+
+
+frontend/.pnp
+frontend/.pnp.*
+frontend/.yarn/*
+frontend/.yarn/patches
+frontend/.yarn/plugins
+frontend/.yarn/releases
+frontend/.yarn/versions
+
+package-lock.json
+
+# testing
+frontend/coverage
+
+# next.js
+frontend/.next/
+frontend/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+frontend/.env*
+
+# vercel
+frontend/.vercel
+
+# typescript
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts

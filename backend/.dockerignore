@@ -1,0 +1,36 @@
+# Maven build directory
+target/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+
+# Logs
+logs/
+*.log
+
+# Git
+.git/
+.github/
+.gitignore
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env*
+*.env
+
+# Application specific
+uploads/
+
+# Test files
+**/test/
+**/tests/ 
