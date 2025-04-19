@@ -89,19 +89,19 @@ export const UserService = {
   
   // Update user profile
   updateUserProfile: async (userId: number, data: UpdateProfileRequest): Promise<User> => {
-    const response = await apiClient.put<User>(`/api/users/${userId}/profile`, data);
+    const response = await apiClient.put<User>(`/users/${userId}/profile`, data);
     return response.data;
   },
   
   // Update user settings
   updateUserSettings: async (userId: number, data: UpdateSettingsRequest): Promise<User> => {
-    const response = await apiClient.put<User>(`/api/users/${userId}/settings`, data);
+    const response = await apiClient.put<User>(`/users/${userId}/settings`, data);
     return response.data;
   },
   
   // Update user password
   updateUserPassword: async (userId: number, data: UpdatePasswordRequest): Promise<void> => {
-    await apiClient.put(`/api/users/${userId}/password`, data);
+    await apiClient.put(`/users/${userId}/password`, data);
   }
 };
 
