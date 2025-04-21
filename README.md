@@ -13,8 +13,8 @@ This guide provides step-by-step instructions for testing the Leave Management S
 
 The Docker images for this application are available on Docker Hub:
 
-- Backend: `https://hub.docker.com/repository/docker/jchishugi/lms-backend`
-- Frontend: `https://hub.docker.com/repository/docker/jchishugi/lms-frontend`
+- Backend: https://hub.docker.com/repository/docker/jchishugi/lms-backend
+- Frontend: https://hub.docker.com/repository/docker/jchishugi/lms-frontend
 
 ## Prerequisites
 
