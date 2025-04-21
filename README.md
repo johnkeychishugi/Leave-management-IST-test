@@ -156,7 +156,7 @@ docker logs lms-frontend
 ## Testing the Backend API
 
 1. Open a web browser and navigate to the Swagger UI:
-   http://localhost:8080/swagger-ui.html
+   http://localhost:8080/api/swagger-ui/index.html
 
 2. Explore the available API endpoints:
    - Authentication endpoints
