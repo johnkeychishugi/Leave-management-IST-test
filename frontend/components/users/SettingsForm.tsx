@@ -24,10 +24,8 @@ const SettingsForm: React.FC = () => {
     if (user) {
       try {
         setSettings({
-          preferredTheme: user.preferredTheme || 'light',
-          emailNotifications: true,
-          inAppNotifications: true,
-          ...parseNotificationPreferences(user.notificationPreferences),
+          preferredTheme: (user as any).preferredTheme || 'light',
+          ...parseNotificationPreferences((user as any).notificationPreferences),
         });
       } catch (error) {
         console.error('Error parsing notification preferences:', error);

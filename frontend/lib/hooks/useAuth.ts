@@ -69,7 +69,7 @@ export function useAuth(): AuthContextType {
 
   const hasRole = (role: string): boolean => {
     if (!user || !user.roles) return false;
-    return user.roles.some(r => r.name === role);
+    return user.roles.some((r: string) => r === role);
   };
 
   const logout = () => {

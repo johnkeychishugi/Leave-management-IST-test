@@ -151,8 +151,8 @@ const AllLeavesPage = () => {
       </div>
 
       <Card>
-        <CardHeader className="px-6 pt-6 pb-3">
-          <Tabs defaultValue="all" value={selectedTab} onValueChange={setSelectedTab}>
+        <Tabs defaultValue="all" value={selectedTab} onValueChange={setSelectedTab}>
+          <CardHeader className="px-6 pt-6 pb-3">
             <TabsList>
               <TabsTrigger value="all">All ({leavesByStatus.all.length})</TabsTrigger>
               <TabsTrigger value="pending">Pending ({leavesByStatus.pending.length})</TabsTrigger>
@@ -160,80 +160,80 @@ const AllLeavesPage = () => {
               <TabsTrigger value="rejected">Rejected ({leavesByStatus.rejected.length})</TabsTrigger>
               <TabsTrigger value="cancelled">Cancelled ({leavesByStatus.cancelled.length})</TabsTrigger>
             </TabsList>
-          </Tabs>
-        </CardHeader>
-        <CardContent className="p-6">
-          <TabsContent value="all" className="m-0">
-            {isLoading ? (
-              <div className="space-y-4">
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-48 w-full" />
-              </div>
-            ) : leavesByStatus.all.length > 0 ? (
-              <LeaveApplicationTable leaveApplications={leavesByStatus.all} showActions={false} />
-            ) : (
-              <div className="text-center py-10 text-gray-500">
-                No leave applications found for the selected criteria.
-              </div>
-            )}
-          </TabsContent>
-          <TabsContent value="pending" className="m-0">
-            {isLoading ? (
-              <div className="space-y-4">
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-48 w-full" />
-              </div>
-            ) : leavesByStatus.pending.length > 0 ? (
-              <LeaveApplicationTable leaveApplications={leavesByStatus.pending} showActions={false} />
-            ) : (
-              <div className="text-center py-10 text-gray-500">
-                No pending leave applications found.
-              </div>
-            )}
-          </TabsContent>
-          <TabsContent value="approved" className="m-0">
-            {isLoading ? (
-              <div className="space-y-4">
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-48 w-full" />
-              </div>
-            ) : leavesByStatus.approved.length > 0 ? (
-              <LeaveApplicationTable leaveApplications={leavesByStatus.approved} showActions={false} />
-            ) : (
-              <div className="text-center py-10 text-gray-500">
-                No approved leave applications found.
-              </div>
-            )}
-          </TabsContent>
-          <TabsContent value="rejected" className="m-0">
-            {isLoading ? (
-              <div className="space-y-4">
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-48 w-full" />
-              </div>
-            ) : leavesByStatus.rejected.length > 0 ? (
-              <LeaveApplicationTable leaveApplications={leavesByStatus.rejected} showActions={false} />
-            ) : (
-              <div className="text-center py-10 text-gray-500">
-                No rejected leave applications found.
-              </div>
-            )}
-          </TabsContent>
-          <TabsContent value="cancelled" className="m-0">
-            {isLoading ? (
-              <div className="space-y-4">
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-48 w-full" />
-              </div>
-            ) : leavesByStatus.cancelled.length > 0 ? (
-              <LeaveApplicationTable leaveApplications={leavesByStatus.cancelled} showActions={false} />
-            ) : (
-              <div className="text-center py-10 text-gray-500">
-                No cancelled leave applications found.
-              </div>
-            )}
-          </TabsContent>
-        </CardContent>
+          </CardHeader>
+          <CardContent className="p-6">
+            <TabsContent value="all" className="m-0">
+              {isLoading ? (
+                <div className="space-y-4">
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-48 w-full" />
+                </div>
+              ) : leavesByStatus.all.length > 0 ? (
+                <LeaveApplicationTable leaveApplications={leavesByStatus.all} showActions={false} />
+              ) : (
+                <div className="text-center py-10 text-gray-500">
+                  No leave applications found for the selected criteria.
+                </div>
+              )}
+            </TabsContent>
+            <TabsContent value="pending" className="m-0">
+              {isLoading ? (
+                <div className="space-y-4">
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-48 w-full" />
+                </div>
+              ) : leavesByStatus.pending.length > 0 ? (
+                <LeaveApplicationTable leaveApplications={leavesByStatus.pending} showActions={false} />
+              ) : (
+                <div className="text-center py-10 text-gray-500">
+                  No pending leave applications found.
+                </div>
+              )}
+            </TabsContent>
+            <TabsContent value="approved" className="m-0">
+              {isLoading ? (
+                <div className="space-y-4">
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-48 w-full" />
+                </div>
+              ) : leavesByStatus.approved.length > 0 ? (
+                <LeaveApplicationTable leaveApplications={leavesByStatus.approved} showActions={false} />
+              ) : (
+                <div className="text-center py-10 text-gray-500">
+                  No approved leave applications found.
+                </div>
+              )}
+            </TabsContent>
+            <TabsContent value="rejected" className="m-0">
+              {isLoading ? (
+                <div className="space-y-4">
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-48 w-full" />
+                </div>
+              ) : leavesByStatus.rejected.length > 0 ? (
+                <LeaveApplicationTable leaveApplications={leavesByStatus.rejected} showActions={false} />
+              ) : (
+                <div className="text-center py-10 text-gray-500">
+                  No rejected leave applications found.
+                </div>
+              )}
+            </TabsContent>
+            <TabsContent value="cancelled" className="m-0">
+              {isLoading ? (
+                <div className="space-y-4">
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-48 w-full" />
+                </div>
+              ) : leavesByStatus.cancelled.length > 0 ? (
+                <LeaveApplicationTable leaveApplications={leavesByStatus.cancelled} showActions={false} />
+              ) : (
+                <div className="text-center py-10 text-gray-500">
+                  No cancelled leave applications found.
+                </div>
+              )}
+            </TabsContent>
+          </CardContent>
+        </Tabs>
       </Card>
     </div>
   );

@@ -143,7 +143,15 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8080
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:8080/api
+      - NEXT_PUBLIC_ALLOWED_DOMAINS=ist.com
+      - NEXT_PUBLIC_AZURE_CLIENT_ID=a182ac8e-b6fb-4775-b902-03cd5ca2defb
+      - NEXT_PUBLIC_AZURE_AUTHORITY=https://login.microsoftonline.com/consumers
+      - NEXT_PUBLIC_AZURE_REDIRECT_URI=http://localhost:3000/login
+      - NEXT_PUBLIC_AZURE_POST_LOGOUT_REDIRECT_URI=http://localhost:3000/login
+      - NEXT_PUBLIC_AZURE_SCOPES=openid profile email User.Read
+      - NEXT_PUBLIC_AZURE_GRAPH_ENDPOINT=https://graph.microsoft.com/v1.0
     depends_on:
       - backend
     restart: unless-stopped
