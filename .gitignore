@@ -16,6 +16,9 @@ backend/.env
 #ignore .env in root
 .env
 
+#ignore DOCKER_HUB_DEPLOYMENT.md
+DOCKER_HUB_DEPLOYMENT.md
+
 
 frontend/.pnp
 frontend/.pnp.*

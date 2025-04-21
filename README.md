@@ -1,6 +1,6 @@
-# Leave Management System
+# Testing Guide: Leave Management System
 
-A comprehensive Leave Management System with a Spring Boot backend and Next.js frontend.
+This guide provides step-by-step instructions for testing the Leave Management System.
 
 ## Architecture
 
@@ -13,21 +13,27 @@ A comprehensive Leave Management System with a Spring Boot backend and Next.js f
 
 The Docker images for this application are available on Docker Hub:
 
-- Backend: `jchishugi/lms-backend`
-- Frontend: `jchishugi/lms-frontend`
+- Backend: `https://hub.docker.com/repository/docker/jchishugi/lms-backend`
+- Frontend: `https://hub.docker.com/repository/docker/jchishugi/lms-frontend`
 
-## Setup Instructions
+## Prerequisites
 
-### Prerequisites
+- Docker and Docker Compose installed
+- Internet connection to pull images from Docker Hub
 
-- Docker and Docker Compose installed on your system
-- Git (optional, for cloning the repository)
+## Setup for Testing
 
-### Option 1: Run Using Docker Compose with Pre-built Images
+1. Create a new directory for testing:
 
-1. Create a `docker-compose.yml` file with the following content:
+```bash
+mkdir lms-test
+cd lms-test
+```
 
-```yaml
+2. Create a `docker-compose.yml` file:
+
+```bash
+cat > docker-compose.yml << 'EOF'
 version: '3.9'
 
 services:
@@ -37,9 +43,9 @@ services:
     environment:
       POSTGRES_DB: lms
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: postgres 
     ports:
-      - "5433:5432"
+      - "5433:5432" 
     volumes:
       - postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -71,80 +77,138 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8080
+       - NODE_ENV=development
+       - NEXT_PUBLIC_API_URL=http://localhost:8080/api
+       - NEXT_PUBLIC_ALLOWED_DOMAINS=ist.com
+       - NEXT_PUBLIC_AZURE_CLIENT_ID=a182ac8e-b6fb-4775-b902-03cd5ca2defb
+       - NEXT_PUBLIC_AZURE_AUTHORITY=https://login.microsoftonline.com/consumers
+       - NEXT_PUBLIC_AZURE_REDIRECT_URI=http://localhost:3000/login
+       - NEXT_PUBLIC_AZURE_POST_LOGOUT_REDIRECT_URI=http://localhost:3000/login
+       - NEXT_PUBLIC_AZURE_SCOPES=openid profile email User.Read
+       - NEXT_PUBLIC_AZURE_GRAPH_ENDPOINT=https://graph.microsoft.com/v1.0
     depends_on:
       - backend
     restart: unless-stopped
 
 volumes:
   postgres-data:
+EOF
 ```
 
-2. Run the application:
+## Starting the Application
+
+1. Start all services:
 
 ```bash
 docker-compose up -d
 ```
 
-### Option 2: Clone and Build Locally
-
-1. Clone the repository:
+2. Check if all containers are running:
 
 ```bash
-git clone https://github.com/jchishugi/leave-management-system.git
-cd leave-management-system
+docker-compose ps
 ```
 
-2. Start the application using Docker Compose:
+You should see all three services (postgres, backend, frontend) in the "Up" state.
+
+3. Check container logs for any errors:
 
 ```bash
-docker-compose up -d
+# Check backend logs
+docker logs lms-backend
+
+# Check frontend logs
+docker logs lms-frontend
 ```
 
-## Testing the Application
+## Testing the Frontend
 
-1. Once all containers are running, you can access:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8080
-   - API Documentation (Swagger): http://localhost:8080/swagger-ui.html
+1. Open a web browser and navigate to:
+   http://localhost:3000
 
-2. The default admin credentials are:
-   - Username: admin@example.com
-   - Password: admin123
+2. You should see the login page of the Leave Management System.
 
-3. To verify all services are running properly:
+3. Test the login functionality with the default:
+  ### Admin credentials:
+     - Username: admin@ist.com
+     - Password: admin123
+
+  ### Manager credentials:
+     - Username: manager@ist.com
+     - Password: manager123
+
+  ### Employee credentials:
+     - Username: employee@ist.com
+     - Password: employee123
+  
+
+4. After logging in, verify that you can:
+   - View the dashboard
+   - Navigate to different sections
+   - See the leave calendar
+   - Create leave balance((Admin/Manager))
+   - Manager users (Admin/Manager)
+   - Apply for a leave
+   - Create Leave type, department (Admin)
+   - Access the profile section
+   - Etc
+
+## Testing the Backend API
+
+1. Open a web browser and navigate to the Swagger UI:
+   http://localhost:8080/swagger-ui.html
+
+2. Explore the available API endpoints:
+   - Authentication endpoints
+   - Leave management endpoints
+   - User management endpoints
+
+3. Test API functionality using Swagger UI:
+   - Try to authenticate
+   - Retrieve user information
+   - Submit a leave request
+
+## End-to-End Testing Scenarios
+
+### Scenario 1: User Registration and Login
+
+1. Register a new user if the function is available
+2. Login with the newly created user
+3. Verify that the user can access their dashboard
+
+### Scenario 2: Leave Application Process
+
+1. Login as an employee
+2. Navigate to the leave application section
+3. Submit a new leave request
+4. Verify the leave appears in the pending requests
+
+### Scenario 3: Manager Approval Flow
+
+1. Login as a manager or an admin
+2. Navigate to the leave approval section
+3. Approve or reject a pending leave request
+4. Verify the status change is reflected correctly
+
+## Performance Testing
+
+1. Check application load time:
+   - Frontend initial load time
+   - Dashboard rendering time
+   - API response times
+
+2. Check database connectivity:
+   - View logs for any database connection issues
+   - Verify data persistence by creating records and restarting containers
+
+## Cleanup
+
+When you're done testing, you can stop and remove all containers:
 
 ```bash
-docker ps
+# Stop containers
+docker-compose down
+
+# Remove volumes (only if you want to clear all data)
+docker-compose down -v
 ```
-
-You should see three containers running: postgres, backend, and frontend.
-
-## Development Setup
-
-### Backend Development
-
-1. The backend is a Spring Boot application using Maven
-2. Main dependencies include:
-   - Spring Web
-   - Spring Data JPA
-   - Spring Security
-   - JWT Authentication
-   - PostgreSQL
-   - AWS S3 for document storage (optional)
-
-### Frontend Development
-
-1. The frontend is a Next.js application
-2. Main dependencies include:
-   - React
-   - Tailwind CSS
-   - Axios for API calls
-   - React Query for data fetching
-   - Next Auth for authentication
-
-## Troubleshooting
-
-- **Database Connection Issues**: Check if PostgreSQL container is running and healthy
-- **Backend Not Starting**: Check backend logs with `docker logs lms-backend`
-- **Frontend Not Loading**: Check frontend logs with `docker logs lms-frontend` 
