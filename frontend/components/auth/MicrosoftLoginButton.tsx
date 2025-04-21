@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { AuthService } from '../../lib/api/auth';
 import { useAuth } from '@/lib/context/AuthContext';
+import { useNotifications } from '@/lib/context/NotificationContext';
 
 interface MicrosoftLoginButtonProps {
   className?: string;
@@ -17,6 +18,7 @@ export default function MicrosoftLoginButton({ className = '' }: MicrosoftLoginB
   const { login, isInitialized } = useMicrosoftAuth();
   const router = useRouter();
   const { isLoading: isLoadingData, refreshUser } = useAuth();
+  const { fetchNotifications } = useNotifications();
 
   const handleMicrosoftLogin = async () => {
     if (!isInitialized) {
@@ -78,10 +80,14 @@ export default function MicrosoftLoginButton({ className = '' }: MicrosoftLoginB
       });
       
       console.log("Backend authentication successful:", authResponse);
-      toast.success('Login successful! Redirecting to dashboard...');
-
+      
       // Refresh the user data in AuthContext
-      refreshUser();
+      await refreshUser();
+      
+      // Refresh notifications immediately after login
+      await fetchNotifications();
+      
+      toast.success('Login successful! Redirecting to dashboard...');
       
       // Step 5: Redirect to dashboard
       router.push('/dashboard');
@@ -137,10 +143,22 @@ export default function MicrosoftLoginButton({ className = '' }: MicrosoftLoginB
     <button
       onClick={handleMicrosoftLogin}
       disabled={isLoading || !isInitialized}
-      className={`w-full flex justify-center items-center px-4 py-2 bg-[#2F2F2F] text-white rounded-md hover:bg-[#1E1E1E] transition-colors ${className}`}
+      className={`w-full flex justify-center items-center px-4 py-3 bg-gray-800 hover:bg-gray-900 text-white rounded-lg transition-all duration-200 ${className}`}
     >
-      <FaMicrosoft className="h-5 w-5 mr-2" />
-      <span>{isLoading ? 'Signing in...' : 'Sign in with Microsoft'}</span>
+      {isLoading ? (
+        <>
+          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Signing in...
+        </>
+      ) : (
+        <>
+          <FaMicrosoft className="h-5 w-5 mr-2" />
+          Sign in with Microsoft
+        </>
+      )}
     </button>
   );
 } 

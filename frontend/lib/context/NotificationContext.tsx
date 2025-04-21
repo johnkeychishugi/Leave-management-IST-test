@@ -34,18 +34,20 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const fetchNotifications = async () => {
     if (!isAuthenticated) return;
     
     try {
+      console.log('Fetching notifications for user...');
       setLoading(true);
       const [allNotifications, count] = await Promise.all([
         NotificationService.getAllNotifications(),
         NotificationService.getUnreadCount()
       ]);
       
+      console.log(`Received ${allNotifications.length} notifications, ${count} unread`);
       setNotifications(allNotifications);
       setUnreadCount(count);
     } catch (error) {
@@ -108,19 +110,30 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
     }
   };
 
-  // Poll for new notifications every minute
+  // Fetch notifications when authentication state changes
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchNotifications();
+    } else {
+      // Clear notifications when logged out
+      setNotifications([]);
+      setUnreadCount(0);
+    }
+  }, [isAuthenticated, user?.id]);
+
+  // Poll for new notifications every minute only when authenticated
   useEffect(() => {
     if (!isAuthenticated) return;
     
-    // Initial fetch
-    fetchNotifications();
-    
-    // Set up interval
+    console.log('Setting up notification polling interval');
     const interval = setInterval(() => {
       fetchNotifications();
     }, 60000); // 1 minute
     
-    return () => clearInterval(interval);
+    return () => {
+      console.log('Clearing notification polling interval');
+      clearInterval(interval);
+    };
   }, [isAuthenticated]);
 
   const value = {
