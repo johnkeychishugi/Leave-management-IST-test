@@ -49,6 +49,9 @@ public class DataInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         logger.info("Initializing reference data...");
         
+        // Initialize roles first
+        initializeRoles();
+        
         // Initialize standard leave types
         initializeLeaveTypes();
         
@@ -56,6 +59,26 @@ public class DataInitializer implements ApplicationRunner {
         initializeDefaultUsers();
         
         logger.info("Reference data initialization complete");
+    }
+
+    /**
+     * Initialize roles if they don't exist
+     */
+    private void initializeRoles() {
+        logger.info("Checking for roles...");
+        
+        // Create each role if it doesn't exist
+        for (ERole role : ERole.values()) {
+            Optional<Role> existingRole = roleRepository.findByName(role);
+            if (existingRole.isEmpty()) {
+                logger.info("Creating role: {}", role);
+                Role newRole = new Role();
+                newRole.setName(role);
+                roleRepository.save(newRole);
+            } else {
+                logger.info("Role already exists: {}", role);
+            }
+        }
     }
 
     /**
