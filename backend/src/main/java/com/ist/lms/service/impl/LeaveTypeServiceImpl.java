@@ -4,7 +4,6 @@ import com.ist.lms.exception.ResourceNotFoundException;
 import com.ist.lms.model.LeaveType;
 import com.ist.lms.repository.LeaveTypeRepository;
 import com.ist.lms.service.LeaveTypeService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

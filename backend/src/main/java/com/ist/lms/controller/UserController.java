@@ -2,13 +2,13 @@ package com.ist.lms.controller;
 
 import com.ist.lms.exception.ResourceNotFoundException;
 import com.ist.lms.model.User;
+import com.ist.lms.repository.UserRepository;
 import com.ist.lms.security.SecurityService;
 import com.ist.lms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Map;
 
@@ -18,11 +18,13 @@ public class UserController {
     
     private final UserService userService;
     private final SecurityService securityService;
+    private final UserRepository userRepository;
     
     @Autowired
-    public UserController(UserService userService, SecurityService securityService) {
+    public UserController(UserService userService, SecurityService securityService, UserRepository userRepository) {
         this.userService = userService;
         this.securityService = securityService;
+        this.userRepository = userRepository;
     }
     
     @GetMapping
@@ -76,12 +78,72 @@ public class UserController {
     
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('HR') or @securityService.isCurrentUser(#id)")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody Map<String, Object> userData) {
         if (!userService.getUserById(id).isPresent()) {
             throw new ResourceNotFoundException("User not found with id: " + id);
         }
         
-        user.setId(id);
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+            
+        // Extract data from the request
+        if (userData.containsKey("firstName")) {
+            user.setFirstName(userData.get("firstName").toString());
+        }
+        
+        if (userData.containsKey("lastName")) {
+            user.setLastName(userData.get("lastName").toString());
+        }
+        
+        if (userData.containsKey("email")) {
+            user.setEmail(userData.get("email").toString());
+        }
+        
+        if (userData.containsKey("phoneNumber")) {
+            user.setPhoneNumber(userData.get("phoneNumber").toString());
+        }
+        
+        if (userData.containsKey("profilePictureUrl")) {
+            user.setProfilePictureUrl(userData.get("profilePictureUrl").toString());
+        }
+        
+        if (userData.containsKey("active")) {
+            boolean isActive = Boolean.parseBoolean(userData.get("active").toString());
+            user.setActive(isActive);
+        }
+        
+        if (userData.containsKey("employmentDate")) {
+            String dateStr = userData.get("employmentDate").toString();
+            if (dateStr != null && !dateStr.isEmpty()) {
+                try {
+                    java.time.LocalDate date = java.time.LocalDate.parse(dateStr);
+                    user.setEmploymentDate(date);
+                } catch (Exception e) {
+                    // Ignore if date is not in the correct format
+                }
+            }
+        }
+        
+        // Handle manager ID specially
+        if (userData.containsKey("managerId") && userData.get("managerId") != null) {
+            try {
+                Long managerId = Long.parseLong(userData.get("managerId").toString());
+                userService.assignManager(id, managerId);
+            } catch (NumberFormatException e) {
+                // Ignore if not a valid number
+            }
+        }
+        
+        // Handle department ID specially
+        if (userData.containsKey("departmentId") && userData.get("departmentId") != null) {
+            try {
+                Long departmentId = Long.parseLong(userData.get("departmentId").toString());
+                userService.assignDepartment(id, departmentId);
+            } catch (NumberFormatException e) {
+                // Ignore if not a valid number
+            }
+        }
+        
         return ResponseEntity.ok(userService.updateUser(user));
     }
     
