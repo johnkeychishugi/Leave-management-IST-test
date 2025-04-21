@@ -23,12 +23,18 @@ public class LeaveTypeServiceImpl implements LeaveTypeService {
     
     @Override
     public List<LeaveType> getAllLeaveTypes() {
-        return leaveTypeRepository.findAll();
+        return leaveTypeRepository.findAll()
+                .stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .toList();
     }
     
     @Override
     public List<LeaveType> getAllActiveLeaveTypes() {
-        return leaveTypeRepository.findAllActive();
+        return leaveTypeRepository.findAllActive()
+                .stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .toList();
     }
     
     @Override

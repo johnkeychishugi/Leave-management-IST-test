@@ -45,17 +45,26 @@ public class LeaveBalanceServiceImpl implements LeaveBalanceService {
     
     @Override
     public List<LeaveBalance> getAllLeaveBalances() {
-        return leaveBalanceRepository.findAll();
+        return leaveBalanceRepository.findAll()
+                .stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .toList();
     }
     
     @Override
     public List<LeaveBalance> getLeaveBalancesByUserId(Long userId) {
-        return leaveBalanceRepository.findByUserId(userId);
+        return leaveBalanceRepository.findByUserId(userId)
+                .stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .toList();
     }
     
     @Override
     public List<LeaveBalance> getLeaveBalancesByUserIdAndYear(Long userId, int year) {
-        return leaveBalanceRepository.findByUserIdAndYear(userId, year);
+        return leaveBalanceRepository.findByUserIdAndYear(userId, year)
+                .stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .toList();
     }
     
     @Override

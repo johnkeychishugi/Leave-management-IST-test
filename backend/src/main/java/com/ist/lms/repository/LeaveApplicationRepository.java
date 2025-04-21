@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface LeaveApplicationRepository extends JpaRepository<LeaveApplication, Long> {
+       //SORT BY CREATED DATE DESC
     List<LeaveApplication> findByUserId(Long userId);
     
     List<LeaveApplication> findByUserIdAndStatus(Long userId, LeaveStatus status);

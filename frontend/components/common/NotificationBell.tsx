@@ -5,6 +5,7 @@ import { FiBell, FiCheck, FiTrash2 } from 'react-icons/fi';
 import { useNotifications } from '../../lib/context/NotificationContext';
 import { formatDistanceToNow } from 'date-fns';
 import { NotificationType } from '../../lib/api/types';
+import { useConfirmDialog } from '@/lib/context/ConfirmProvider';
 
 export default function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +17,7 @@ export default function NotificationBell() {
     markAllAsRead,
     deleteNotification 
   } = useNotifications();
+  const { confirm } = useConfirmDialog();
 
   const toggleNotifications = () => {
     setIsOpen(!isOpen);
@@ -28,7 +30,18 @@ export default function NotificationBell() {
 
   const handleDelete = async (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    await deleteNotification(id);
+    
+    const confirmed = await confirm({
+      title: 'Delete Notification',
+      message: 'Are you sure you want to delete this notification?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      type: 'danger'
+    });
+    
+    if (confirmed) {
+      await deleteNotification(id);
+    }
   };
 
   const handleMarkAllAsRead = async (e: React.MouseEvent) => {

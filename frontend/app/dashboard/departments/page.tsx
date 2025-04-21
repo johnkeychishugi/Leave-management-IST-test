@@ -6,6 +6,7 @@ import { DepartmentService, UserService, Department, User } from '@/lib/api';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import { toast } from 'react-hot-toast';
 import { FiEdit2, FiPlus, FiTrash2, FiUser } from 'react-icons/fi';
+import { useConfirmDialog } from '@/lib/context/ConfirmProvider';
 
 export default function DepartmentsPage() {
   const queryClient = useQueryClient();
@@ -20,6 +21,7 @@ export default function DepartmentsPage() {
   const [showManagerModal, setShowManagerModal] = useState(false);
   const [departmentForManager, setDepartmentForManager] = useState<Department | null>(null);
   const [selectedManagerId, setSelectedManagerId] = useState('');
+  const { confirm } = useConfirmDialog();
 
   // Fetch departments
   const { data: departments, isLoading: isLoadingDepartments } = useQuery({
@@ -120,8 +122,16 @@ export default function DepartmentsPage() {
     setShowModal(true);
   };
 
-  const handleDeleteDepartment = (id: number) => {
-    if (window.confirm('Are you sure you want to delete this department? This action cannot be undone.')) {
+  const handleDeleteDepartment = async (id: number) => {
+    const confirmed = await confirm({
+      title: 'Delete Department',
+      message: 'Are you sure you want to delete this department? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      type: 'danger'
+    });
+    
+    if (confirmed) {
       deleteDepartmentMutation.mutate(id);
     }
   };

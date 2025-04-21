@@ -1,10 +1,9 @@
 'use client';
 
 import { ReactNode, useEffect, useState } from 'react';
-import { PublicClientApplication, EventType, EventMessage, AuthenticationResult } from '@azure/msal-browser';
+import { PublicClientApplication, EventMessage } from '@azure/msal-browser';
 import { MsalProvider as MsalReactProvider } from '@azure/msal-react';
-import { msalConfig, isAllowedDomain, getProfilePictureUrl, loginRequest } from './config';
-import { toast } from 'react-hot-toast';
+import { msalConfig, loginRequest } from './config';
 import { useRouter } from 'next/navigation';
 
 interface MsalProviderProps {

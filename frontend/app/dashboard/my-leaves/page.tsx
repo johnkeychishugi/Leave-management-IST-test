@@ -9,6 +9,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { useConfirmDialog } from '@/lib/context/ConfirmProvider';
 
 export default function MyLeavesPage() {
   const queryClient = useQueryClient();
@@ -18,6 +19,7 @@ export default function MyLeavesPage() {
   const [cancelReason, setCancelReason] = useState('');
   const [selectedLeaveId, setSelectedLeaveId] = useState<number | null>(null);
   const [view, setView] = useState<'list' | 'calendar'>('list');
+  const { confirm } = useConfirmDialog();
 
   // Simulate getting user ID from session
   useEffect(() => {
@@ -83,8 +85,16 @@ export default function MyLeavesPage() {
     }
   };
 
-  const handleDeleteLeave = (id: number) => {
-    if (window.confirm('Are you sure you want to delete this leave application? This action cannot be undone.')) {
+  const handleDeleteLeave = async (id: number) => {
+    const confirmed = await confirm({
+      title: 'Delete Leave Application',
+      message: 'Are you sure you want to delete this leave application? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      type: 'danger'
+    });
+    
+    if (confirmed) {
       deleteLeaveMutation.mutate(id);
     }
   };

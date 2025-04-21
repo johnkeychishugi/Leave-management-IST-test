@@ -3,10 +3,10 @@ import { Configuration, LogLevel } from "@azure/msal-browser";
 // Microsoft Authentication Library configuration
 export const msalConfig: Configuration = {
   auth: {
-    clientId: process.env.NEXT_PUBLIC_AZURE_CLIENT_ID || "e6dadfaa-81a5-4b15-9025-fa892ad57cc7", // Default to a placeholder, should be set in environment
-    authority: "https://login.microsoftonline.com/consumers",
-    redirectUri: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000',
-    postLogoutRedirectUri: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000',
+    clientId: process.env.NEXT_PUBLIC_AZURE_CLIENT_ID || "",
+    authority: process.env.NEXT_PUBLIC_AZURE_AUTHORITY,
+    redirectUri: process.env.NEXT_PUBLIC_AZURE_REDIRECT_URI,
+    postLogoutRedirectUri: process.env.NEXT_PUBLIC_AZURE_POST_LOGOUT_REDIRECT_URI,
   },
   cache: {
     cacheLocation: "localStorage",
@@ -47,7 +47,7 @@ export const loginRequest = {
 
 // Get Microsoft Graph photo endpoint for user's profile picture
 export const getProfilePictureUrl = (accessToken: string): string => {
-  return `https://graph.microsoft.com/v1.0/me/photo/$value`;
+  return `${process.env.NEXT_PUBLIC_AZURE_GRAPH_ENDPOINT}/me/photo/$value`;
 };
 
 // Check if email domain is allowed for login

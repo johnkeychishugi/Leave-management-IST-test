@@ -31,7 +31,10 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public List<Department> getAllDepartments() {
         logger.debug("Getting all departments");
-        return departmentRepository.findAll();
+        return departmentRepository.findAll()
+                .stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .toList();
     }
 
     @Override

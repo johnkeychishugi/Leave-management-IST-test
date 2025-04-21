@@ -31,6 +31,7 @@ import { Input } from '@/components/ui/Input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LeaveBalance, LeaveType, User } from '@/lib/api/types';
 import { FiEdit, FiPlus, FiRefreshCw, FiTrash, FiUserPlus } from 'react-icons/fi';
+import { useConfirmDialog } from '@/lib/context/ConfirmProvider';
 
 export default function AdminLeaveBalancesPage() {
   const { user, hasRole } = useAuth();
@@ -41,6 +42,7 @@ export default function AdminLeaveBalancesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
   const [showAdjustForm, setShowAdjustForm] = useState<{id: number, balance: LeaveBalance} | null>(null);
+  const { confirm } = useConfirmDialog();
   
   // Redirect if not admin or HR
   if (user && !hasRole('ROLE_ADMIN') && !hasRole('ROLE_HR')) {
@@ -529,8 +531,16 @@ export default function AdminLeaveBalancesPage() {
                           <FiEdit size={16} />
                         </Button>
                         <Button
-                          onClick={() => {
-                            if (window.confirm(`Are you sure you want to delete this leave balance for ${balance.user.firstName} ${balance.user.lastName}?`)) {
+                          onClick={async () => {
+                            const confirmed = await confirm({
+                              title: "Delete Leave Balance",
+                              message: `Are you sure you want to delete this leave balance for ${balance.user.firstName} ${balance.user.lastName}?`,
+                              confirmText: "Delete",
+                              cancelText: "Cancel",
+                              type: "danger"
+                            });
+                            
+                            if (confirmed) {
                               deleteBalanceMutation.mutate(balance.id);
                             }
                           }}

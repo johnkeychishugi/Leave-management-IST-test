@@ -135,11 +135,14 @@ export enum NotificationType {
 export interface Notification {
   id: number;
   userId: number;
+  title: string;
   message: string;
   type: NotificationType;
   read: boolean;
   createdAt: string;
   data?: any;
+  actionUrl?: string;
+  actionText?: string;
 }
 
 // New types for profile and settings

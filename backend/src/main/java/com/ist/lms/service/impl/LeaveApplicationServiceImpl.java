@@ -10,6 +10,7 @@ import com.ist.lms.repository.*;
 import com.ist.lms.service.LeaveApplicationService;
 import com.ist.lms.service.LeaveBalanceService;
 import com.ist.lms.service.NotificationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,42 +52,66 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
     
     @Override
     public List<LeaveApplication> getAllLeaveApplications() {
-        return leaveApplicationRepository.findAllWithUsers();
+        return leaveApplicationRepository.findAllWithUsers()
+                .stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .toList();
     }
     
     @Override
     public List<LeaveApplication> getLeaveApplicationsByStatus(LeaveStatus status) {
-        return leaveApplicationRepository.findByStatus(status);
+        return leaveApplicationRepository.findByStatus(status)
+                .stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .toList();
     }
     
     @Override
     public List<LeaveApplication> getLeaveApplicationsByUserId(Long userId) {
-        return leaveApplicationRepository.findByUserId(userId);
+        return leaveApplicationRepository.findByUserId(userId)
+                .stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .toList();
     }
     
     @Override
     public List<LeaveApplication> getLeaveApplicationsByUserIdAndStatus(Long userId, LeaveStatus status) {
-        return leaveApplicationRepository.findByUserIdAndStatus(userId, status);
+        return leaveApplicationRepository.findByUserIdAndStatus(userId, status)
+                .stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .toList();
     }
     
     @Override
     public List<LeaveApplication> getOverlappingLeaves(Long userId, LocalDate startDate, LocalDate endDate) {
-        return leaveApplicationRepository.findOverlappingLeaves(userId, startDate, endDate);
+        return leaveApplicationRepository.findOverlappingLeaves(userId, startDate, endDate)
+                .stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .toList();
     }
     
     @Override
     public List<LeaveApplication> getAllLeavesInDateRange(LocalDate startDate, LocalDate endDate) {
-        return leaveApplicationRepository.findAllLeavesInDateRange(startDate, endDate);
+        return leaveApplicationRepository.findAllLeavesInDateRange(startDate, endDate)
+                .stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .toList();
     }
     
     @Override
     public List<LeaveApplication> getDepartmentLeavesInDateRange(Long departmentId, LocalDate startDate, LocalDate endDate) {
-        return leaveApplicationRepository.findDepartmentLeavesInDateRange(departmentId, startDate, endDate);
+        return leaveApplicationRepository.findDepartmentLeavesInDateRange(departmentId, startDate, endDate)
+                .stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .toList();
     }
     
     @Override
     public List<LeaveApplication> getPendingApprovalsByApproverId(Long approverId) {
-        return leaveApplicationRepository.findPendingApprovalsByApproverId(approverId);
+        return leaveApplicationRepository.findPendingApprovalsByApproverId(approverId)
+                .stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .toList();
     }
     
     @Override

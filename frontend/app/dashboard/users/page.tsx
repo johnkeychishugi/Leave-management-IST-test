@@ -8,6 +8,7 @@ import { FiEdit2, FiTrash2, FiPlus, FiUserCheck, FiUserX } from 'react-icons/fi'
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import toast from 'react-hot-toast';
+import { useConfirmDialog } from '@/lib/context/ConfirmProvider';
 
 export default function UsersPage() {
   const queryClient = useQueryClient();
@@ -18,6 +19,7 @@ export default function UsersPage() {
     lastName: '',
     email: '',
   });
+  const { confirm } = useConfirmDialog();
 
   // Fetch users data
   const { data: users, isLoading } = useQuery({
@@ -165,8 +167,16 @@ export default function UsersPage() {
   };
 
   // Handle user deletion
-  const handleDelete = (id: number) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
+  const handleDelete = async (id: number) => {
+    const confirmed = await confirm({
+      title: 'Delete User',
+      message: 'Are you sure you want to delete this user? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      type: 'danger'
+    });
+    
+    if (confirmed) {
       deleteUserMutation.mutate(id);
     }
   };

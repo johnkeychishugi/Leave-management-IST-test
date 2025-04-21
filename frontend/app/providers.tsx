@@ -8,6 +8,7 @@ import { AuthProvider } from '../lib/context/AuthContext'
 import { MsalProvider } from '../lib/msal/MsalProvider'
 import { SessionProvider } from 'next-auth/react'
 import { NotificationProvider } from '../lib/context/NotificationContext'
+import { ConfirmProvider } from '../lib/context/ConfirmProvider'
 
 // Create a client
 const queryClient = new QueryClient({
@@ -31,8 +32,10 @@ export function Providers({ children }: ProvidersProps) {
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <NotificationProvider>
-              {children}
-              <ReactQueryDevtools initialIsOpen={false} />
+              <ConfirmProvider>
+                {children}
+                <ReactQueryDevtools initialIsOpen={false} />
+              </ConfirmProvider>
             </NotificationProvider>
           </AuthProvider>
         </QueryClientProvider>

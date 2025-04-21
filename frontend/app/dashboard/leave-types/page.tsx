@@ -6,6 +6,7 @@ import { LeaveTypeService, LeaveType } from '@/lib/api';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import { toast } from 'react-hot-toast';
 import { FiEdit2, FiPlus, FiTrash2 } from 'react-icons/fi';
+import { useConfirmDialog } from '@/lib/context/ConfirmProvider';
 
 export default function LeaveTypesPage() {
   const queryClient = useQueryClient();
@@ -18,6 +19,7 @@ export default function LeaveTypesPage() {
     defaultDays: '',
     color: '#6366f1' // Default indigo color
   });
+  const { confirm } = useConfirmDialog();
 
   // Fetch leave types
   const { data: leaveTypes, isLoading: isLoadingLeaveTypes } = useQuery({
@@ -97,8 +99,16 @@ export default function LeaveTypesPage() {
     setShowModal(true);
   };
 
-  const handleDeleteLeaveType = (id: number) => {
-    if (window.confirm('Are you sure you want to delete this leave type? This action cannot be undone.')) {
+  const handleDeleteLeaveType = async (id: number) => {
+    const confirmed = await confirm({
+      title: 'Delete Leave Type',
+      message: 'Are you sure you want to delete this leave type? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      type: 'danger'
+    });
+    
+    if (confirmed) {
       deleteLeaveTypeMutation.mutate(id);
     }
   };
