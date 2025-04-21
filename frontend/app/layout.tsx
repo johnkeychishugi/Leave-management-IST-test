@@ -13,7 +13,7 @@ const inter = Inter({
 })
 
 // Pages that don't require authentication
-const publicPages = ['/login', '/register'];
+const publicPages = ['/login', '/register', '/'];
 
 // We can't use export const metadata with 'use client'
 // So we define these values directly in the head element
@@ -50,7 +50,7 @@ export default function RootLayout({
         <meta name="description" content="A comprehensive leave management system for IST employees" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className={`${inter.variable} font-sans`}>
+      <body className={`${inter.variable} font-sans`} suppressHydrationWarning>
         <Providers>
           {children}
           <Toaster position="top-right" />

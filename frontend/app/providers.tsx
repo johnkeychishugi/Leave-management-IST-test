@@ -3,10 +3,8 @@
 import React from 'react'
 import { ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { AuthProvider } from '../lib/context/AuthContext'
 import { MsalProvider } from '../lib/msal/MsalProvider'
-import { SessionProvider } from 'next-auth/react'
 import { NotificationProvider } from '../lib/context/NotificationContext'
 import { ConfirmProvider } from '../lib/context/ConfirmProvider'
 
@@ -27,19 +25,16 @@ interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <SessionProvider>
-      <MsalProvider>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <NotificationProvider>
-              <ConfirmProvider>
-                {children}
-                <ReactQueryDevtools initialIsOpen={false} />
-              </ConfirmProvider>
-            </NotificationProvider>
-          </AuthProvider>
-        </QueryClientProvider>
-      </MsalProvider>
-    </SessionProvider>
+    <MsalProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <NotificationProvider>
+            <ConfirmProvider>
+              {children}
+            </ConfirmProvider>
+          </NotificationProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </MsalProvider>
   )
 } 

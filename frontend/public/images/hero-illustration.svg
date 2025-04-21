@@ -1,0 +1,60 @@
+<svg width="600" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background decorative elements -->
+  <circle cx="300" cy="200" r="170" fill="#F3F4FF" />
+  <circle cx="190" cy="110" r="40" fill="#E8EAFF" />
+  <circle cx="460" cy="260" r="25" fill="#F0E7FF" />
+  
+  <!-- Calendar base -->
+  <rect x="190" y="100" width="220" height="200" rx="12" fill="white" stroke="#6366F1" stroke-width="3"/>
+  
+  <!-- Calendar header -->
+  <rect x="190" y="100" width="220" height="40" rx="12" fill="#8B5CF6" />
+  <rect x="190" y="120" width="220" height="20" rx="0" fill="#8B5CF6" />
+  
+  <!-- Calendar days header -->
+  <rect x="200" y="150" width="30" height="20" rx="4" fill="#EEF2FF" />
+  <rect x="240" y="150" width="30" height="20" rx="4" fill="#EEF2FF" />
+  <rect x="280" y="150" width="30" height="20" rx="4" fill="#EEF2FF" />
+  <rect x="320" y="150" width="30" height="20" rx="4" fill="#EEF2FF" />
+  <rect x="360" y="150" width="30" height="20" rx="4" fill="#EEF2FF" />
+  
+  <!-- Calendar days -->
+  <rect x="200" y="180" width="30" height="25" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1" />
+  <rect x="240" y="180" width="30" height="25" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1" />
+  <rect x="280" y="180" width="30" height="25" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1" />
+  <rect x="320" y="180" width="30" height="25" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1" />
+  <rect x="360" y="180" width="30" height="25" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1" />
+  
+  <rect x="200" y="215" width="30" height="25" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1" />
+  <rect x="240" y="215" width="30" height="25" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1" />
+  <rect x="280" y="215" width="30" height="25" rx="4" fill="#DBF4FF" stroke="#0EA5E9" stroke-width="1" />
+  <text x="289" y="232" font-family="Arial" font-size="14" font-weight="bold" fill="#0369A1">8</text>
+  <rect x="320" y="215" width="30" height="25" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1" />
+  <rect x="360" y="215" width="30" height="25" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1" />
+  
+  <rect x="200" y="250" width="30" height="25" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1" />
+  <rect x="240" y="250" width="30" height="25" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1" />
+  <rect x="280" y="250" width="30" height="25" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1" />
+  <rect x="320" y="250" width="30" height="25" rx="4" fill="#FFEDD5" stroke="#F97316" stroke-width="1" />
+  <text x="329" y="267" font-family="Arial" font-size="14" font-weight="bold" fill="#C2410C">11</text>
+  <rect x="360" y="250" width="30" height="25" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1" />
+  
+  <!-- Person silhouette -->
+  <circle cx="140" cy="240" r="35" fill="#C4B5FD" />
+  <path d="M140 200 Q170 210 170 240 Q170 270 140 280 Q110 270 110 240 Q110 210 140 200" fill="#8B5CF6" />
+  <circle cx="140" cy="190" r="25" fill="#C4B5FD" />
+  
+  <!-- Approval checkmark -->
+  <circle cx="450" cy="160" r="30" fill="#C4B5FD" />
+  <path d="M435 160 L445 170 L465 150" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Decorative elements -->
+  <circle cx="400" cy="80" r="15" fill="#F0ABFC" opacity="0.6" />
+  <circle cx="110" cy="320" r="18" fill="#818CF8" opacity="0.6" />
+  <circle cx="480" cy="340" r="12" fill="#F0ABFC" opacity="0.6" />
+  
+  <!-- Connection lines -->
+  <path d="M175 190 Q220 170 270 180" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="4 4" />
+  <path d="M175 240 Q250 260 300 240" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="4 4" />
+  <path d="M350 215 Q400 180 430 160" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="4 4" />
+</svg> 

@@ -58,6 +58,17 @@ export const AuthService = {
     roles: roles ? JSON.parse(roles) : [],
     profilePictureUrl: profilePictureUrl || undefined
    };
+  },
+  
+  logout: () => {
+    // Clear all auth-related items from localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('lastName');
+    localStorage.removeItem('email');
+    localStorage.removeItem('roles');
+    localStorage.removeItem('profilePictureUrl');
   }
 };
 
