@@ -4,9 +4,9 @@ import { Configuration, LogLevel } from "@azure/msal-browser";
 export const msalConfig: Configuration = {
   auth: {
     clientId: process.env.NEXT_PUBLIC_AZURE_CLIENT_ID || "",
-    authority: process.env.NEXT_PUBLIC_AZURE_AUTHORITY,
-    redirectUri: process.env.NEXT_PUBLIC_AZURE_REDIRECT_URI,
-    postLogoutRedirectUri: process.env.NEXT_PUBLIC_AZURE_POST_LOGOUT_REDIRECT_URI,
+    authority: process.env.NEXT_PUBLIC_AZURE_AUTHORITY || "https://login.microsoftonline.com/consumers",
+    redirectUri: process.env.NEXT_PUBLIC_AZURE_REDIRECT_URI || "http://localhost:3000",
+    postLogoutRedirectUri: process.env.NEXT_PUBLIC_AZURE_POST_LOGOUT_REDIRECT_URI || "http://localhost:3000",
   },
   cache: {
     cacheLocation: "localStorage",

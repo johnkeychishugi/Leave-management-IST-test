@@ -28,6 +28,7 @@ export default function MicrosoftLoginButton({ className = '' }: MicrosoftLoginB
     
     try {
       // Step 1: Authenticate with Microsoft
+      console.log("Starting Microsoft authentication flow...");
       const response = await login();
       console.log("Microsoft authentication successful:", response);
       
@@ -45,35 +46,42 @@ export default function MicrosoftLoginButton({ className = '' }: MicrosoftLoginB
       // Step 3: Get profile picture if available
       let profilePictureUrl: string | undefined;
       try {
-        const graphEndpoint = `https://graph.microsoft.com/v1.0/me/photo/$value`;
-        const photoResponse = await fetch(graphEndpoint, {
-          headers: {
-            'Authorization': `Bearer ${response.accessToken}`
+        if (response.accessToken) {
+          const graphEndpoint = `https://graph.microsoft.com/v1.0/me/photo/$value`;
+          console.log("Fetching profile picture from Graph API...");
+          const photoResponse = await fetch(graphEndpoint, {
+            headers: {
+              'Authorization': `Bearer ${response.accessToken}`
+            }
+          });
+          
+          if (photoResponse.ok) {
+            const blob = await photoResponse.blob();
+            profilePictureUrl = URL.createObjectURL(blob);
+            console.log("Profile picture retrieved successfully");
+          } else {
+            console.warn('Could not fetch profile picture. Status:', photoResponse.status);
           }
-        });
-        
-        if (photoResponse.ok) {
-          const blob = await photoResponse.blob();
-          profilePictureUrl = URL.createObjectURL(blob);
         }
       } catch (photoError) {
         console.warn('Could not fetch profile picture:', photoError);
       }
       
       // Step 4: Authenticate with our backend
+      console.log("Authenticating with backend using Microsoft credentials...");
       const authResponse = await AuthService.microsoftAuth({
         firstName,
         lastName,
         email: userEmail,
-        token: response.accessToken,
+        token: response.accessToken || '',
         profilePictureUrl
       });
       
       console.log("Backend authentication successful:", authResponse);
       toast.success('Login successful! Redirecting to dashboard...');
 
-       // Refresh the user data in AuthContext
-       refreshUser();
+      // Refresh the user data in AuthContext
+      refreshUser();
       
       // Step 5: Redirect to dashboard
       router.push('/dashboard');
@@ -81,22 +89,37 @@ export default function MicrosoftLoginButton({ className = '' }: MicrosoftLoginB
     } catch (error) {
       console.error('Error during Microsoft login:', error);
       
+      // Enhanced error handling for debugging
+      const errorStr = JSON.stringify(error, Object.getOwnPropertyNames(error));
+      console.error('Error details:', errorStr);
+      
       // Handle different types of errors
       if (error instanceof Error) {
+        const errorMessage = error.message || 'Authentication failed';
+        
+        // Specific error handling for hash_empty_error
+        if (errorMessage.includes('hash_empty_error')) {
+          toast.error('Authentication flow interrupted. Please ensure pop-ups are allowed in your browser and try again.');
+          console.error('MSAL hash_empty_error: This usually indicates that the authentication redirect flow was interrupted.');
+        } 
         // Check for domain restriction errors
-        if (error.message?.includes('domain') || error.message?.includes('email addresses are allowed')) {
+        else if (errorMessage.includes('domain') || errorMessage.includes('email addresses are allowed')) {
           toast.error('Your email domain is not allowed in production. Please use a company email address.');
         } else {
           // If it's a standard error with a message
-          toast.error(error.message || 'Authentication failed. Please try again.');
+          toast.error(errorMessage);
         }
       } else if (typeof error === 'object' && error !== null) {
         // If it's an object with error details
         const errorObj = error as any;
         const errorMessage = errorObj.message || errorObj.error_description || 'Authentication failed';
         
+        // Check for specific MSAL errors
+        if (errorMessage.includes('hash_empty_error')) {
+          toast.error('Authentication flow interrupted. Please ensure pop-ups are allowed in your browser and try again.');
+        }
         // Check for domain restriction errors in the message
-        if (errorMessage?.includes('domain') || errorMessage?.includes('email addresses are allowed')) {
+        else if (errorMessage.includes('domain') || errorMessage.includes('email addresses are allowed')) {
           toast.error('Your email domain is not allowed in production. Please use a company email address.');
         } else {
           toast.error(errorMessage);

@@ -12,7 +12,6 @@ const ProfileForm: React.FC = () => {
     firstName: '',
     lastName: '',
     email: '',
-    phoneNumber: '',
     profilePictureUrl: '',
   });
 
@@ -22,7 +21,6 @@ const ProfileForm: React.FC = () => {
         firstName: user.firstName || '',
         lastName: user.lastName || '',
         email: user.email || '',
-        phoneNumber: user.phoneNumber || '',
         profilePictureUrl: user.profilePictureUrl || '',
       });
     }
@@ -43,7 +41,6 @@ const ProfileForm: React.FC = () => {
       await UserService.updateUserProfile(user.id, {
         firstName: profileData.firstName,
         lastName: profileData.lastName,
-        phoneNumber: profileData.phoneNumber,
         profilePictureUrl: profileData.profilePictureUrl,
       });
       
@@ -113,22 +110,7 @@ const ProfileForm: React.FC = () => {
           <p className="text-xs text-gray-500 mt-1">
             Email address cannot be changed
           </p>
-        </div>
-        
-        <div>
-          <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">
-            Phone Number
-          </label>
-          <input
-            type="text"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={profileData.phoneNumber}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-          />
-        </div>
-        
+        </div>  
         <div>
           <label htmlFor="profilePictureUrl" className="block text-sm font-medium text-gray-700 mb-1">
             Profile Picture URL
@@ -155,35 +137,6 @@ const ProfileForm: React.FC = () => {
         )}
       </div>
       
-      <div className="space-y-4 pt-4">
-        <h2 className="text-xl font-semibold border-b pb-2">Work Information</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Department
-            </label>
-            <input
-              type="text"
-              value={user.department?.name || 'Not assigned'}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 cursor-not-allowed"
-              disabled
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Manager
-            </label>
-            <input
-              type="text"
-              value={user.manager ? `${user.manager.firstName} ${user.manager.lastName}` : 'Not assigned'}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 cursor-not-allowed"
-              disabled
-            />
-          </div>
-        </div>
-      </div>
       
       <div className="pt-6">
         <button

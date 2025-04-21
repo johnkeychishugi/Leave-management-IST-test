@@ -1,10 +1,25 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
-import { PublicClientApplication, EventMessage } from '@azure/msal-browser';
-import { MsalProvider as MsalReactProvider } from '@azure/msal-react';
+import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
+import { PublicClientApplication, EventMessage, AuthenticationResult, PopupRequest } from '@azure/msal-browser';
 import { msalConfig, loginRequest } from './config';
-import { useRouter } from 'next/navigation';
+
+// Create context to share MSAL instance
+interface MsalContextType {
+  msalInstance: PublicClientApplication | null;
+  isInitialized: boolean;
+  login: () => Promise<AuthenticationResult>;
+  logout: () => void;
+}
+
+const MsalContext = createContext<MsalContextType>({
+  msalInstance: null,
+  isInitialized: false,
+  login: async () => { throw new Error('MSAL not initialized'); },
+  logout: () => {}
+});
+
+export const useMicrosoftAuth = () => useContext(MsalContext);
 
 interface MsalProviderProps {
   children: ReactNode;
@@ -13,22 +28,24 @@ interface MsalProviderProps {
 export const MsalProvider = ({ children }: MsalProviderProps) => {
   const [msalInstance, setMsalInstance] = useState<PublicClientApplication | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
+    // Create a single MSAL instance
     const instance = new PublicClientApplication(msalConfig);
     
-    // Initialize the MSAL instance first
+    // Initialize the MSAL instance
     instance.initialize().then(() => {
-      // Handle redirect promise after initialization (for redirect flow only, not used in our popup flow)
+      console.log("MSAL instance initialized successfully");
+      
+      // Handle any redirects (even though we're using popup)
+      // This is important for error handling
       instance.handleRedirectPromise().catch(err => {
         console.error('Error during redirect handling:', err);
       });
 
-      // Note: We're not processing login success here anymore as it's handled in MicrosoftLoginButton
-      // We'll just log events for debugging
+      // Add event logging for debugging
       const callbackId = instance.addEventCallback((event: EventMessage) => {
-        console.log("MSAL event:", event.eventType);
+        console.log("MSAL event:", event.eventType, event);
       });
 
       setMsalInstance(instance);
@@ -42,59 +59,38 @@ export const MsalProvider = ({ children }: MsalProviderProps) => {
     }).catch(err => {
       console.error("MSAL initialization failed:", err);
     });
-  }, [router]);
-
-  if (!msalInstance || !isInitialized) {
-    return null; // Or a loading indicator
-  }
-
-  return (
-    <MsalReactProvider instance={msalInstance}>
-      {children}
-    </MsalReactProvider>
-  );
-};
-
-// Export the login and logout functions for use in components
-export const useMicrosoftAuth = () => {
-  const [msalInstance, setMsalInstance] = useState<PublicClientApplication | null>(null);
-  const [isInitialized, setIsInitialized] = useState(false);
-  
-  useEffect(() => {
-    const instance = new PublicClientApplication(msalConfig);
-    
-    // Initialize the MSAL instance
-    instance.initialize().then(() => {
-      setMsalInstance(instance);
-      setIsInitialized(true);
-      console.log("MSAL instance initialized successfully");
-    }).catch(err => {
-      console.error("MSAL initialization failed:", err);
-    });
-    
-    return () => {
-      // Any cleanup if needed
-    };
   }, []);
-  
-  const login = async () => {
+
+  // Login function using popup
+  const login = async (): Promise<AuthenticationResult> => {
     if (!msalInstance || !isInitialized) {
       throw new Error("MSAL not initialized. Please wait for initialization to complete.");
     }
     
     try {
       console.log("Attempting Microsoft popup login...");
-      return await msalInstance.loginPopup(loginRequest);
+      // Make sure we're correctly configuring the popup
+      const popupConfig: PopupRequest = {
+        ...loginRequest,
+        redirectUri: msalConfig.auth.redirectUri
+      };
+      return await msalInstance.loginPopup(popupConfig);
     } catch (error) {
       console.error('Error during Microsoft login:', error);
       throw error;
     }
   };
   
+  // Logout function
   const logout = () => {
     if (!msalInstance || !isInitialized) return;
     msalInstance.logout();
   };
-  
-  return { login, logout, isInitialized };
+
+  // Provide the MSAL instance and functions through context
+  return (
+    <MsalContext.Provider value={{ msalInstance, isInitialized, login, logout }}>
+      {children}
+    </MsalContext.Provider>
+  );
 }; 
