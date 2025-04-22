@@ -39,7 +39,11 @@ export default function LeaveBalancesPage() {
   });
 
   if (isLoading) {
-    return <LeaveBalancesSkeleton />;
+    return (
+      <div className="flex justify-center my-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      </div>
+    );
   }
 
   if (error) {
@@ -173,32 +177,3 @@ function LeaveBalancesTable({ leaveBalances, year }: { leaveBalances: LeaveBalan
     </Card>
   );
 }
-
-function LeaveBalancesSkeleton() {
-  return (
-    <div>
-      <div className="mb-6 flex justify-between items-center">
-        <div>
-          <Skeleton className="h-8 w-64 mb-2" />
-          <Skeleton className="h-4 w-48" />
-        </div>
-      </div>
-      
-      <Skeleton className="h-10 w-48 mb-4" />
-      
-      <Card className="border-gray-200 bg-white shadow-sm">
-        <CardHeader className="border-b border-gray-100">
-          <Skeleton className="h-6 w-40 mb-2" />
-          <Skeleton className="h-4 w-60" />
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4 py-4">
-            {Array(4).fill(0).map((_, i) => (
-              <Skeleton key={i} className="h-12 w-full" />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-} 

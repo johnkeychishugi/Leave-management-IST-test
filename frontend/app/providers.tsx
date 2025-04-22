@@ -12,10 +12,14 @@ import { ConfirmProvider } from '../lib/context/ConfirmProvider'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      refetchOnWindowFocus: false,
+      staleTime: 0, // Always fetch fresh data
+      gcTime: 0, // Don't cache data
+      refetchOnWindowFocus: true, // Refetch when window gets focus
       retry: 1
     },
+    mutations: {
+      networkMode: 'always'
+    }
   },
 })
 

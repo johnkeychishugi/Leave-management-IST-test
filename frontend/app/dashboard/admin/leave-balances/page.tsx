@@ -25,9 +25,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LeaveBalance, LeaveType, User } from '@/lib/api/types';
 import { FiEdit, FiPlus, FiRefreshCw, FiTrash, FiUserPlus } from 'react-icons/fi';
@@ -209,7 +207,11 @@ export default function AdminLeaveBalancesPage() {
   const isLoading = usersLoading || leaveTypesLoading || balancesLoading;
 
   if (isLoading) {
-    return <AdminLeaveBalancesSkeleton />;
+    return (
+      <div className="flex justify-center my-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      </div>
+    );
   }
 
   return (
@@ -561,37 +563,3 @@ export default function AdminLeaveBalancesPage() {
     </div>
   );
 }
-
-function AdminLeaveBalancesSkeleton() {
-  return (
-    <div>
-      <div className="mb-6 flex justify-between items-center">
-        <div>
-          <Skeleton className="h-8 w-64 mb-2" />
-          <Skeleton className="h-4 w-48" />
-        </div>
-        <Skeleton className="h-10 w-40" />
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Skeleton className="h-12" />
-        <Skeleton className="h-12" />
-        <Skeleton className="h-12" />
-      </div>
-      
-      <Card className="border-gray-200 bg-white shadow-sm">
-        <CardHeader className="border-b border-gray-100">
-          <Skeleton className="h-6 w-40 mb-2" />
-          <Skeleton className="h-4 w-60" />
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4 py-4">
-            {Array(5).fill(0).map((_, i) => (
-              <Skeleton key={i} className="h-16 w-full" />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-} 
