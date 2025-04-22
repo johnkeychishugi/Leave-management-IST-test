@@ -31,7 +31,7 @@ public class LeaveApplicationController {
     }
     
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('HR')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public List<LeaveApplication> getAllLeaveApplications(
             @RequestParam(required = false) LeaveStatus status) {
         
@@ -174,7 +174,7 @@ public class LeaveApplicationController {
     }
     
     @PutMapping("/{id}/cancel")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('HR') or @securityService.isApplicationOwner(#id)")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or @securityService.isApplicationOwner(#id)")
     public ResponseEntity<LeaveApplication> cancelLeaveApplication(
             @PathVariable Long id, 
             @RequestBody Map<String, String> cancelData) {
@@ -188,7 +188,7 @@ public class LeaveApplicationController {
     }
     
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<?> deleteLeaveApplication(@PathVariable Long id) {
         if (!leaveApplicationService.getLeaveApplicationById(id).isPresent()) {
             throw new ResourceNotFoundException("Leave Application not found with id: " + id);

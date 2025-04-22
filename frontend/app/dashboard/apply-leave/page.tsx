@@ -5,6 +5,8 @@ import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query';
 import { LeaveTypeService, LeaveApplicationService, LeaveType, LeaveStatus } from '@/lib/api';
 import { toast } from 'react-hot-toast';
 import { FiCalendar, FiAlertCircle } from 'react-icons/fi';
+import { DatePicker } from '@/components/ui/date-picker';
+import { format, parse } from 'date-fns';
 
 export default function ApplyLeavePage() {
   const queryClient = useQueryClient();
@@ -15,6 +17,8 @@ export default function ApplyLeavePage() {
     endDate: '',
     reason: ''
   });
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [totalDays, setTotalDays] = useState<number | null>(null);
   const [isBalanceAvailable, setIsBalanceAvailable] = useState<boolean | null>(null);
   const [hasOverlappingLeaves, setHasOverlappingLeaves] = useState(false);
@@ -32,6 +36,23 @@ export default function ApplyLeavePage() {
     queryKey: ['leaveTypes'],
     queryFn: () => LeaveTypeService.getAllLeaveTypes()
   });
+
+  // Update formData when date pickers change
+  useEffect(() => {
+    if (startDate) {
+      setFormData(prev => ({
+        ...prev,
+        startDate: format(startDate, 'yyyy-MM-dd')
+      }));
+    }
+    
+    if (endDate) {
+      setFormData(prev => ({
+        ...prev,
+        endDate: format(endDate, 'yyyy-MM-dd')
+      }));
+    }
+  }, [startDate, endDate]);
 
   // Check for overlapping leaves when dates change
   useEffect(() => {
@@ -114,6 +135,8 @@ export default function ApplyLeavePage() {
         endDate: '',
         reason: ''
       });
+      setStartDate(undefined);
+      setEndDate(undefined);
       
       toast.success('Leave application submitted successfully!');
     },
@@ -194,39 +217,33 @@ export default function ApplyLeavePage() {
           {/* Date Range */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Start Date <span className="text-red-500">*</span>
               </label>
-              <div className="relative">
-                <input
-                  type="date"
-                  id="startDate"
-                  name="startDate"
-                  value={formData.startDate}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  required
-                />
-                <FiCalendar className="absolute right-3 top-3 text-gray-400" />
-              </div>
+              <DatePicker
+                value={startDate}
+                onChange={(date) => {
+                  setStartDate(date);
+                  // When start date changes, ensure end date is not before it
+                  if (date && endDate && date > endDate) {
+                    setEndDate(date);
+                  }
+                }}
+                placeholder="Select start date"
+                minDate={new Date()} // Can't select dates in the past
+              />
             </div>
             <div>
-              <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 End Date <span className="text-red-500">*</span>
               </label>
-              <div className="relative">
-                <input
-                  type="date"
-                  id="endDate"
-                  name="endDate"
-                  value={formData.endDate}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  required
-                  min={formData.startDate}
-                />
-                <FiCalendar className="absolute right-3 top-3 text-gray-400" />
-              </div>
+              <DatePicker
+                value={endDate}
+                onChange={setEndDate}
+                placeholder="Select end date"
+                minDate={startDate || new Date()} // Can't select dates before start date
+                disabled={!startDate} // Can't select end date before selecting start date
+              />
             </div>
           </div>
 
