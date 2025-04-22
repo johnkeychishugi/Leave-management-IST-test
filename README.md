@@ -103,6 +103,8 @@ EOF
 docker-compose up -d
 ```
 
+Wait for 1 to 3 minutes to allow all the services to start properly.
+
 2. Check if all containers are running:
 
 ```bash
